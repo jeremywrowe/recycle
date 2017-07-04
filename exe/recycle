@@ -1,6 +1,23 @@
 #!/usr/bin/env ruby
 require_relative '../lib/recycle'
 require 'fileutils'
+require 'rubygems'
+require 'commander/import'
 
-recycle_home = File.join(ENV['RECYCLE_ROOT'] || Dir.home, '.recycle')
-FileUtils.mkdir_p recycle_home
+
+program :name, 'Recycle'
+program :version, Recycle::VERSION
+program :description, 'A command for storing frequently used commands.'
+
+default_command :help
+
+RECYCLE_HOME = File.join(ENV['RECYCLE_ROOT'] || Dir.home, '.recycle')
+
+command :init do |cmd|
+  cmd.syntax = 'recycle init'
+  cmd.description = 'Setup the recycle storage directory. RECYCLE_ROOT env variable to change destination'
+  cmd.action do
+    FileUtils.mkdir_p(RECYCLE_HOME)
+  end
+end
+
