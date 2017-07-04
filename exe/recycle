@@ -2,8 +2,8 @@
 require_relative '../lib/recycle'
 require 'fileutils'
 require 'rubygems'
+require 'yaml'
 require 'commander/import'
-
 
 program :name, 'Recycle'
 program :version, Recycle::VERSION
@@ -11,13 +11,38 @@ program :description, 'A command for storing frequently used commands.'
 
 default_command :help
 
-RECYCLE_HOME = File.join(ENV['RECYCLE_ROOT'] || Dir.home, '.recycle')
+RECYCLE_HOME   = File.join(ENV['RECYCLE_ROOT'] || Dir.home, '.recycle')
+DATA_FILE      = File.join(RECYCLE_HOME, 'data.yml')
+RECYCLE_CONFIG = File.exists?(DATA_FILE) ? YAML.load_file(DATA_FILE) : {}
 
 command :init do |cmd|
   cmd.syntax = 'recycle init'
   cmd.description = 'Setup the recycle storage directory. RECYCLE_ROOT env variable to change destination'
   cmd.action do
     FileUtils.mkdir_p(RECYCLE_HOME)
+  end
+end
+
+command :list do |cmd|
+  cmd.syntax = 'recycle list'
+  cmd.action do
+    output = ''
+    dir_width = RECYCLE_CONFIG['directories'].keys.map(&:length).max
+    cmd_width = RECYCLE_CONFIG['commands'].keys.map(&:length).max
+    output << <<~DOC
+    Commands
+    ================================================================================
+
+    l  => ls -ltr
+    du => du -sh
+
+    Directories
+    ================================================================================
+
+    blog         => /Source/jeremywrowe/blog
+    awesomesauce => /everything/is/awesome
+    DOC
+    puts output
   end
 end
 
