@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require_relative '../lib/recycle'
+require 'fileutils'
+
+recycle_home = File.join(ENV['RECYCLE_ROOT'] || Dir.home, '.recycle')
+FileUtils.mkdir_p recycle_home
