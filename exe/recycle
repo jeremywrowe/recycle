@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 require_relative '../lib/recycle'
+require_relative '../lib/recycle/list'
+
 require 'fileutils'
 require 'rubygems'
 require 'yaml'
@@ -24,24 +26,27 @@ command :init do |cmd|
 end
 
 command :list do |cmd|
-  cmd.syntax = 'recycle list'
-  cmd.action do
+  cmd.syntax = 'recycle list <filter>'
+  cmd.description = 'List all recycle entires. filter can be "dir" or "cmd"'
+  cmd.action do |args|
     output = ''
-    dir_width = RECYCLE_CONFIG['directories'].keys.map(&:length).max
-    cmd_width = RECYCLE_CONFIG['commands'].keys.map(&:length).max
-    output << <<~DOC
-    Commands
-    ================================================================================
+    
+    show_commands    = args.length.zero? || args.include?('cmd')
+    show_directories = args.length.zero? || args.include?('dir')
+    
+    puts Recycle::List.render_section('Commands', RECYCLE_CONFIG.fetch('commands', {})) if show_commands
+    puts Recycle::List.render_section('Directories', RECYCLE_CONFIG.fetch('directories', {})) if show_directories
 
-    l  => ls -ltr
-    du => du -sh
+    unless show_commands || show_directories
+      output << <<~DOC
+      Usage
+      ================================================================================
 
-    Directories
-    ================================================================================
-
-    blog         => /Source/jeremywrowe/blog
-    awesomesauce => /everything/is/awesome
-    DOC
+        recycle list     - Lists out all entities
+        recycle list dir - Lists out directory entities
+        recycle list cmd - Lists out command entities
+      DOC
+    end
     puts output
   end
 end
