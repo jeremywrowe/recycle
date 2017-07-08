@@ -22,6 +22,7 @@ command :init do |cmd|
   cmd.description = 'Setup the recycle storage directory. RECYCLE_ROOT env variable to change destination'
   cmd.action do
     FileUtils.mkdir_p(RECYCLE_HOME)
+    File.open(DATA_FILE, 'w') { |f| f.write RECYCLE_CONFIG.to_yaml }
   end
 end
 
@@ -51,3 +52,36 @@ command :list do |cmd|
   end
 end
 
+command :add do |cmd|
+  cmd.syntax = 'recycle add [OPTION]'
+  cmd.description = 'Add an entry.'
+  cmd.option '-d', '--dir "STRING"', String, 'Adds a directory entry'
+  cmd.option '-c', '--cmd "STRING"', String, 'Adds a command entry'
+
+  cmd.action do |args, options|
+    if options.dir
+      (new_item = {})[options.dir] = args.first
+      RECYCLE_CONFIG["directories"].merge!(new_item)
+    end
+
+    if options.cmd
+      (new_item = {})[options.cmd] = args.first
+      RECYCLE_CONFIG["commands"].merge!(new_item)
+    end
+
+    File.open(DATA_FILE, 'w') { |f| f.write RECYCLE_CONFIG.to_yaml }
+  end
+end
+
+command :remove do |cmd|
+  cmd.syntax = 'recycle remove [OPTION]'
+  cmd.description = 'Remove an entry.'
+  cmd.option '-d', '--dir "STRING"', String, 'Removes a directory entry'
+  cmd.option '-c', '--cmd "STRING"', String, 'Removes a command entry'
+
+  cmd.action do |args, options|
+    RECYCLE_CONFIG["directories"].delete(options.dir.strip) if options.dir
+    RECYCLE_CONFIG["commands"].delete(options.cmd.strip) if options.cmd
+    File.open(DATA_FILE, 'w') { |f| f.write RECYCLE_CONFIG.to_yaml }
+  end
+end

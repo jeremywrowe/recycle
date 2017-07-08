@@ -1,7 +1,7 @@
 Feature: Listing out items in the recycle configuration
   As a CLI user
-  I want folks to be able to look at their configuration easily.
-  They can do so by listing all (default arguments) or can filter
+  I want to be able to look at my configuration easily.
+  I can do so by either listing all (default arguments) or can filter
   on types with -c (--commands) and -d (--directories)
   flags.
 

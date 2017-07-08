@@ -8,12 +8,12 @@ cucumber_options = {
   cmd: 'bin/cucumber'
 }
 
-guard "cucumber", cucumber_options do
+guard 'cucumber', cucumber_options do
   watch(%r{^exe/.*$})
   watch(%r{^features/.+\.feature$})
-  watch(%r{^features/support/.+$}) { "features" }
+  watch(%r{^features/support/.+$}) { 'features' }
 
   watch(%r{^features/step_definitions/(.+)_steps\.rb$}) do |m|
-    Dir[File.join("**/#{m[1]}.feature")][0] || "features"
+    Dir[File.join("**/#{m[1]}.feature")][0] || 'features'
   end
 end

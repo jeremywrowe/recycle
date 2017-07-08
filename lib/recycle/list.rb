@@ -2,7 +2,7 @@ require 'erb'
 
 module Recycle
   class List < BasicObject
-    TMPL = <<-DATA
+    TMPL = <<-DATA.freeze
 <%= "=" * 80 %>
 <%= title.center(80).rstrip %>
 <%= "=" * 80 %>
@@ -12,11 +12,10 @@ module Recycle
 
     DATA
 
-
     class << self
       def render_section(title, content)
         key_width = content.keys.map(&:length).max
-        sorted_content = content.sort_by {|key, value| key }
+        sorted_content = content.sort_by { |key, _value| key }
         ::ERB.new(TMPL, nil, '-').result(binding)
       end
 
@@ -28,4 +27,3 @@ module Recycle
     end
   end
 end
-

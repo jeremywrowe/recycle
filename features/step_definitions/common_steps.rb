@@ -1,3 +1,5 @@
+require 'yaml'
+
 Given(/^the recycle command is ran with '(.+)'$/) do |args|
   executable = File.join(root_dir, 'exe/recycle')
   @output = `RECYCLE_ROOT="#{tmp_dir}" #{executable} #{args}`
@@ -21,3 +23,7 @@ Then(/^the command output should be$/) do |output|
     'the command did not produce the correct output'
 end
 
+Then(/^the configuration should be$/) do |config_data|
+  config_path = File.join(tmp_dir, '.recycle', 'data.yml')
+  assert_equal YAML.load_file(config_path), YAML.load(config_data)
+end

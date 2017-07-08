@@ -1,4 +1,4 @@
-require "recycle/version"
+require 'recycle/version'
 
 module Recycle
 end
