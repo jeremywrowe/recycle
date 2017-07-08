@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
-require_relative '../lib/recycle'
-require_relative '../lib/recycle/list'
+require 'recycle'
+require 'recycle/list'
 
 require 'fileutils'
 require 'rubygems'
@@ -28,19 +28,26 @@ end
 
 command :list do |cmd|
   cmd.syntax = 'recycle list <filter>'
-  cmd.description = 'List all recycle entires. filter can be "dir" or "cmd"'
-  cmd.action do |args|
+  cmd.description = 'List all recycle entire.'
+  cmd.option '-d', '--dir', String, 'Filters down to just directores'
+  cmd.option '-c', '--cmd', String, 'Filters down to just commands'
+
+  cmd.action do |args, options|
     output = ''
     
-    show_commands    = args.length.zero? || args.include?('cmd')
-    show_directories = args.length.zero? || args.include?('dir')
+    commands         = RECYCLE_CONFIG.fetch('commands', {})
+    directories      = RECYCLE_CONFIG.fetch('directories', {})
+    show_all         = !options.cmd && !options.dir
+    show_commands    = (options.cmd || show_all) && commands.length.positive?
+    show_directories = (options.dir || show_all) && directories.length.positive?
     
-    puts Recycle::List.render_section('Commands', RECYCLE_CONFIG.fetch('commands', {})) if show_commands
-    puts Recycle::List.render_section('Directories', RECYCLE_CONFIG.fetch('directories', {})) if show_directories
+    puts Recycle::List.render_section('Commands', commands) if show_commands
+    puts Recycle::List.render_section('Directories', directories) if show_directories
 
     unless show_commands || show_directories
       output << <<~DOC
-      Usage
+      ================================================================================
+      #{"Usage".center(80).rstrip}
       ================================================================================
 
         recycle list     - Lists out all entities
@@ -59,6 +66,18 @@ command :add do |cmd|
   cmd.option '-c', '--cmd "STRING"', String, 'Adds a command entry'
 
   cmd.action do |args, options|
+    if !options.dir && !options.cmd
+      puts <<~DOC
+      ================================================================================
+      #{"Usage".center(80).rstrip}
+      ================================================================================
+
+        recycle add -c IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
+        recycle add -d IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
+      DOC
+      exit 1
+    end
+
     if options.dir
       (new_item = {})[options.dir] = args.first
       RECYCLE_CONFIG["directories"].merge!(new_item)
@@ -80,8 +99,37 @@ command :remove do |cmd|
   cmd.option '-c', '--cmd "STRING"', String, 'Removes a command entry'
 
   cmd.action do |args, options|
+    if !options.dir && !options.cmd
+      puts <<~DOC
+      ================================================================================
+      #{"Usage".center(80).rstrip}
+      ================================================================================
+
+        recycle remove -c IDENTIFIER - removes the command named IDENTIFIER
+        recycle remove -d IDENTIFIER - removes the command named IDENTIFIER
+      DOC
+      exit 1
+    end
     RECYCLE_CONFIG["directories"].delete(options.dir.strip) if options.dir
     RECYCLE_CONFIG["commands"].delete(options.cmd.strip) if options.cmd
     File.open(DATA_FILE, 'w') { |f| f.write RECYCLE_CONFIG.to_yaml }
+  end
+end
+
+command :exec do |cmd|
+  cmd.syntax = 'recycle exec'
+  cmd.description = 'Outputs all configuration in a shell consumable manner'
+  cmd.action do
+    RECYCLE_CONFIG.fetch('directories', {}).each do |key, value|
+      puts %|alias #{key}="cd #{value}"|
+    end
+
+    RECYCLE_CONFIG.fetch('commands', {}).each do |key, value|
+      puts <<~DOC
+        function #{key}() {
+          #{value}
+        }
+      DOC
+    end
   end
 end
