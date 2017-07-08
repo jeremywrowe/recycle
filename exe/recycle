@@ -15,9 +15,10 @@ default_command :help
 
 RECYCLE_HOME   = File.join(ENV['RECYCLE_ROOT'] || Dir.home, '.recycle')
 DATA_FILE      = File.join(RECYCLE_HOME, 'data.yml')
-RECYCLE_CONFIG = File.exists?(DATA_FILE) ? YAML.load_file(DATA_FILE) : Hash.new do |hash, key|
-  hash[key] = {}
-end
+RECYCLE_CONFIG = File.exists?(DATA_FILE) ? YAML.load_file(DATA_FILE) : {}
+
+RECYCLE_CONFIG['commands'] ||= {}
+RECYCLE_CONFIG['directories'] ||= {}
 
 command :init do |cmd|
   cmd.syntax = 'recycle init'
@@ -53,8 +54,8 @@ command :list do |cmd|
       ================================================================================
 
         recycle list     - Lists out all entities
-        recycle list dir - Lists out directory entities
-        recycle list cmd - Lists out command entities
+        recycle list -d  - Lists out directory entities
+        recycle list -c  - Lists out command entities
       DOC
     end
     puts output
