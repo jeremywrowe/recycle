@@ -19,12 +19,8 @@ Feature: Listing out items in the recycle configuration
   Scenario: Attempting to remove something without a prefix
     Given the recycle command is ran with 'add l'
     Then the command exit status should be '1'
-    And the command output should be
+    And the command output has the header "Usage" followed by
     """
-    ================================================================================
-                                         Usage
-    ================================================================================
-
       recycle add -c IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
       recycle add -d IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
     """

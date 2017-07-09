@@ -20,19 +20,13 @@ Feature: Listing out items in the recycle configuration
   Scenario: Listing all entries with the list command
     Given the recycle command is ran with 'list'
     Then the command exit status should be '0'
-    And the command output should be
+    And the command output has the header "Commands" followed by
     """
-    ================================================================================
-                                        Commands
-    ================================================================================
-
     du => du -sh
     l  => ls -ltr
-
-    ================================================================================
-                                      Directories
-    ================================================================================
-
+    """
+    And the command output has the header "Directories" followed by
+    """
     awesomesauce => /everything/is/awesome
     blog         => /Source/jeremywrowe/blog
     """
@@ -40,12 +34,8 @@ Feature: Listing out items in the recycle configuration
   Scenario: Listing directory entries with the list command
     Given the recycle command is ran with 'list -d'
     Then the command exit status should be '0'
-    And the command output should be
+    And the command output has the header "Directories" followed by
     """
-    ================================================================================
-                                      Directories
-    ================================================================================
-
     awesomesauce => /everything/is/awesome
     blog         => /Source/jeremywrowe/blog
     """
@@ -53,12 +43,8 @@ Feature: Listing out items in the recycle configuration
   Scenario: Listing directory entries with the list command
     Given the recycle command is ran with 'list -c'
     Then the command exit status should be '0'
-    And the command output should be
+    And the command output has the header "Commands" followed by
     """
-    ================================================================================
-                                        Commands
-    ================================================================================
-
     du => du -sh
     l  => ls -ltr
     """
