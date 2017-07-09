@@ -9,5 +9,5 @@ Given /^the command output has the header "(.*)" followed by$/ do |header, outpu
     #{output}
   EXPECTED
 
-  assert_match expected, @output
+  assert_match expected, @output, "expected:\n'#{expected}'\nactual:\n'#{@output}'"
 end

@@ -1,4 +1,3 @@
 require 'recycle/version'
-
-module Recycle
-end
+require 'recycle/util'
+require 'recycle/list'

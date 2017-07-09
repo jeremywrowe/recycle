@@ -21,8 +21,8 @@ Feature: Listing out items in the recycle configuration
     Then the command exit status should be '1'
     And the command output has the header "Usage" followed by
     """
-      recycle add -c IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
-      recycle add -d IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
+    recycle add -c IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
+    recycle add -d IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
     """
 
   Scenario: Adding a command entry

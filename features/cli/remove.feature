@@ -21,8 +21,8 @@ Feature: Listing out items in the recycle configuration
     Then the command exit status should be '1'
     And the command output has the header "Usage" followed by
     """
-      recycle remove -c IDENTIFIER - removes the command named IDENTIFIER
-      recycle remove -d IDENTIFIER - removes the command named IDENTIFIER
+    recycle remove -c IDENTIFIER - removes the command named IDENTIFIER
+    recycle remove -d IDENTIFIER - removes the command named IDENTIFIER
     """
 
   Scenario: Removing a command entry

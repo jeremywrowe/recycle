@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-require 'recycle'
-require 'recycle/list'
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
+require 'recycle'
 require 'fileutils'
 require 'rubygems'
 require 'yaml'
@@ -43,19 +43,23 @@ command :list do |cmd|
     show_all         = !options.cmd && !options.dir
     show_commands    = (options.cmd || show_all) && commands.length.positive?
     show_directories = (options.dir || show_all) && directories.length.positive?
+    data = []
     
-    puts Recycle::List.render_section('Commands', commands) if show_commands
-    puts Recycle::List.render_section('Directories', directories) if show_directories
 
-    unless show_commands || show_directories
+    data <<  Recycle::List.render_section('Commands', commands) if show_commands
+    data <<  Recycle::List.render_section('Directories', directories) if show_directories
+
+    if show_commands || show_directories
+      puts data.join("\n")
+    else
       output << <<~DOC
       There are currently no commands or directories in your configuration.
       To add a command or directory checkout:
 
       recycle add -h
       DOC
+      puts output
     end
-    puts output
   end
 end
 
@@ -68,12 +72,9 @@ command :add do |cmd|
   cmd.action do |args, options|
     if !options.dir && !options.cmd
       puts <<~DOC
-      ================================================================================
-      #{"Usage".center(80).rstrip}
-      ================================================================================
-
-        recycle add -c IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
-        recycle add -d IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
+      #{Recycle::Util.header('Usage')}
+      recycle add -c IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
+      recycle add -d IDENTIFIER "value here" - adds the command named IDENTIFIER with the value provided in quotes
       DOC
       exit 1
     end
@@ -101,12 +102,9 @@ command :remove do |cmd|
   cmd.action do |args, options|
     if !options.dir && !options.cmd
       puts <<~DOC
-      ================================================================================
-      #{"Usage".center(80).rstrip}
-      ================================================================================
-
-        recycle remove -c IDENTIFIER - removes the command named IDENTIFIER
-        recycle remove -d IDENTIFIER - removes the command named IDENTIFIER
+      #{Recycle::Util.header('Usage')}
+      recycle remove -c IDENTIFIER - removes the command named IDENTIFIER
+      recycle remove -d IDENTIFIER - removes the command named IDENTIFIER
       DOC
       exit 1
     end
