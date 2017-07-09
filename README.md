@@ -44,3 +44,7 @@ may not want it to resolve until a later time.
 
 This is still very much a work in progress, but give it a shot and open up pull
 requests as you see fit.
+
+# License
+
+Recycle is released under the [MIT License](http://www.opensource.org/licenses/MIT).
