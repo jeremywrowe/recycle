@@ -49,13 +49,10 @@ command :list do |cmd|
 
     unless show_commands || show_directories
       output << <<~DOC
-      ================================================================================
-      #{"Usage".center(80).rstrip}
-      ================================================================================
+      There are currently no commands or directories in your configuration.
+      To add a command or directory checkout:
 
-        recycle list     - Lists out all entities
-        recycle list -d  - Lists out directory entities
-        recycle list -c  - Lists out command entities
+      recycle add -h
       DOC
     end
     puts output
