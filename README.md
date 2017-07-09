@@ -14,5 +14,28 @@ To use:
 eval "$(recycle exec)"
 ```
 
+Listing configuration:
+
+```sh
+recycle list
+```
+
+![List](https://raw.github.com/jeremywrowe/recycle/master/recycle-list.png)
+
+Adding a command shortcut:
+
+```sh
+recycle add -c lld "ls -ld .?*"
+```
+
+Adding a directory shortcut:
+
+```sh
+recycle add -d h "\$HOME"
+```
+
+*note* You may have to escape reserved shell terms like shown above, since you
+may not want it to resolve until a later time.
+
 This is still very much a work in progress, but give it a shot and open up pull
 requests as you see fit.
