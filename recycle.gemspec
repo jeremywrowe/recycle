@@ -1,8 +1,6 @@
 # coding: utf-8
 
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'recycle/version'
+require_relative 'lib/recycle/version'
 
 Gem::Specification.new do |spec|
   spec.required_ruby_version = '~> 2.3'
@@ -19,7 +17,7 @@ Gem::Specification.new do |spec|
   EOF
   spec.require_paths = ['lib']
   spec.bindir        = 'exe'
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.executables   = ['recycle']
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end

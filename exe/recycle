@@ -1,12 +1,10 @@
 #!/usr/bin/env ruby
-require 'recycle'
 require 'fileutils'
 require 'rubygems'
 require 'yaml'
 require 'commander/import'
 
-require_relative '../lib/recycle/util'
-require_relative '../lib/recycle/list'
+require_relative '../lib/recycle'
 
 program :name, 'Recycle'
 program :version, Recycle::VERSION
