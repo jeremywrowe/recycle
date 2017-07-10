@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
-
 require 'recycle'
 require 'fileutils'
 require 'rubygems'
 require 'yaml'
 require 'commander/import'
+
+require_relative '../lib/recycle/util'
+require_relative '../lib/recycle/list'
 
 program :name, 'Recycle'
 program :version, Recycle::VERSION
