@@ -16,6 +16,14 @@ class MinitestWorld
   def tmp_dir
     File.join(root_dir, 'tmp/test')
   end
+
+  def recycle_dir
+    File.join(tmp_dir, '.recycle')
+  end
+
+  def cache_path
+    File.join(recycle_dir, 'cache')
+  end
 end
 
 World do

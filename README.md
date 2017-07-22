@@ -14,6 +14,20 @@ some of the frustration by adding an easy way of adding directory shortcuts
 eval "$(recycle exec)"
 ```
 
+or
+
+If you'd prefer to not run a ruby executable every startup you can use
+`recycle cache` in conjunction with sourcing the following.
+
+```sh
+source $HOME/.recycle/cache
+```
+
+
+
+
+
+
 Listing configuration:
 
 ```sh

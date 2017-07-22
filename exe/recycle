@@ -14,6 +14,7 @@ default_command :help
 
 RECYCLE_HOME   = File.join(ENV['RECYCLE_ROOT'] || Dir.home, '.recycle')
 DATA_FILE      = File.join(RECYCLE_HOME, 'data.yml')
+CACHE_FILE     = File.join(RECYCLE_HOME, 'cache')
 RECYCLE_CONFIG = File.exists?(DATA_FILE) ? YAML.load_file(DATA_FILE) : {}
 
 RECYCLE_CONFIG['commands'] ||= {}
@@ -113,20 +114,37 @@ command :remove do |cmd|
   end
 end
 
+def output_config(io)
+  RECYCLE_CONFIG.fetch('directories', {}).each do |key, value|
+    io.puts %|alias #{key}="cd #{value}"|
+  end
+
+  RECYCLE_CONFIG.fetch('commands', {}).each do |key, value|
+    io.puts <<~DOC
+      function #{key}() {
+        #{value}
+      }
+    DOC
+  end
+end
+
 command :exec do |cmd|
   cmd.syntax = 'recycle exec'
   cmd.description = 'Outputs all configuration in a shell consumable manner'
   cmd.action do
-    RECYCLE_CONFIG.fetch('directories', {}).each do |key, value|
-      puts %|alias #{key}="cd #{value}"|
-    end
+    output_config($stdout)
+  end
+end
 
-    RECYCLE_CONFIG.fetch('commands', {}).each do |key, value|
-      puts <<~DOC
-        function #{key}() {
-          #{value}
-        }
-      DOC
-    end
+command :cache do |cmd|
+  cmd.syntax = 'recycle cache'
+  cmd.description = "Stores all configuration in a shell consumable manner to #{CACHE_FILE}"
+  cmd.action do
+    File.open(CACHE_FILE, 'w') { |file| output_config(file) }
+    puts <<~DOC
+      You can now source #{CACHE_FILE} instead of using eval.
+      
+      Note: You'll have to rerun 'recycle cache' after you add configuration.
+    DOC
   end
 end
