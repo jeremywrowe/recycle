@@ -62,3 +62,4 @@ requests as you see fit.
 # License
 
 Recycle is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+
